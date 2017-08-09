@@ -3,8 +3,9 @@ var links = require('../config/links');
 var anime = require('./anime');
 var domjs = require('domjs')(document);
 var $ = require('jquery');
+var iconLink = require('../lib/components').iconLink;
 var _a = require('../util'), style = _a.style, classJoin = _a.classJoin;
-var div = domjs.ns.div;
+var _b = domjs.ns, div = _b.div, hr = _b.hr, i = _b.i;
 var withSvg = function (tag) { return function () {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -51,8 +52,8 @@ var classes = style({
     }
 }).classes;
 var icon = function () {
-    var el = (div({ id: 'icon', class: classJoin('hide-xs', classes.icon) }, svg({ viewBox: '0 0 12 12', class: classes.svg }, poly({ points: '3,1 1,1 1,11, 3,11', style: 'fill:' + colors.secondary }), poly({ points: '3,11 3,9 11,9 11,11', style: 'fill:' + colors.secondary }), poly({ points: '11,9 9,9 9,1 11,1', style: 'fill:' + colors.secondary }), poly({ points: '9,3 9,1 5,1 5,3', style: 'fill:' + colors.secondary }), poly({ points: '7,3 5,3 5,7 7,7', style: 'fill:' + colors.secondary }), poly({ class: 'icon-p-1', points: '3,1 1,1 1,1 3,1', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-2', points: '3,11 3,9 3,9 3,11', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-3', points: '11,9 9,9 9,9 11,9', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-4', points: '9,3 9,1 9,1 9,3', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-5', points: '7,3 5,3 5,3 7,3', style: 'fill:' + colors.accent }))));
-    var ani = function () { return $('#icon').hover(function (e) {
+    var el = (div({ id: 'icon', class: classJoin('hide-xs', classes.icon) }, div({ id: 'hitbox' }, svg({ viewBox: '0 0 12 12', class: classes.svg }, poly({ points: '3,1 1,1 1,11, 3,11', style: 'fill:' + colors.background }), poly({ points: '3,11 3,9 11,9 11,11', style: 'fill:' + colors.background }), poly({ points: '11,9 9,9 9,1 11,1', style: 'fill:' + colors.background }), poly({ points: '9,3 9,1 5,1 5,3', style: 'fill:' + colors.background }), poly({ points: '7,3 5,3 5,7 7,7', style: 'fill:' + colors.background }), poly({ class: 'icon-p-1', points: '3,1 1,1 1,1 3,1', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-2', points: '3,11 3,9 3,9 3,11', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-3', points: '11,9 9,9 9,9 11,9', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-4', points: '9,3 9,1 9,1 9,3', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-5', points: '7,3 5,3 5,3 7,3', style: 'fill:' + colors.accent }))), hr(), iconLink(i({ class: 'fa fa-twitter', 'aria-hidden': true, style: 'color:' + colors.background }), links.twitter), hr(), iconLink(i({ class: 'fa fa-github', 'aria-hidden': true, style: 'color:' + colors.background }), links.github), hr(), iconLink(i({ class: 'fa fa-linkedin', 'aria-hidden': true, style: 'color:' + colors.background }), links.linkedin)));
+    var ani = function () { return $('#hitbox').hover(function (e) {
         $(e.target).off(e);
         anime.timeline().add({
             targets: '.icon-p-1',

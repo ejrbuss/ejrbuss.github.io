@@ -71,3 +71,15 @@ h1 {
         color: $primary-color;
     }
 }
+// http://enjoycss.com/gallery/text_effects/dZ
+.anaglyph {
+    text-overflow: clip;
+    text-shadow: -1px 0 1px rgb(30,242,241), 1px 0 1px rgb(246,5,10);
+}
+img.anaglyph {
+  filter: drop-shadow(-1px 0 1px rgb(30,242,241)), drop-shadow(1px 0 1px rgb(246,5,10));
+}
+
+hr {
+    border-top: .2rem solid #f0f1f4;
+}

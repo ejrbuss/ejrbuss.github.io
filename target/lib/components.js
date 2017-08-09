@@ -32,7 +32,7 @@ var navLink = function (text, link, margin) {
     var onclick = internal ? "goto(\"" + link + "\");" : '';
     var attr = {
         href: href, target: target, onclick: onclick,
-        class: classJoin('btn', 'btn-link', classes.link),
+        class: classJoin('btn', 'btn-link anaglyph', classes.link),
         style: "margin:" + margin + ";"
     };
     return a(attr, h4({ class: classes.text }, text));

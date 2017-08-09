@@ -1,4 +1,5 @@
-const domjs = require('domjs')(document);
+const domjs  = require('domjs')(document);
+const tetris = require('../tetris');
 
 const { style, classJoin } = require('../util');
 const { icon }             = require('../lib/transition');
@@ -8,24 +9,24 @@ const { classes } = style({
         width:  '35vh',
         height: '35vh'
     }, center: {
-        width:     '100%',
-        marginTop: '2em',
-        textAlign: 'center'
+        width: '100%',
+    }, canvas: {
+        width:  '40vh',
+        height: '40vh',
+        marginLeft: 'calc(50vw - 18vh)'
     }
 });
 
 const about = () => {
 
-    const { div, img } = domjs.ns;
-    const [ html, cb ] = icon();
+    const { div, img, canvas } = domjs.ns;
+    const [ html, cb ]         = icon();
 
     document.body.appendChild(
-        div({ id:'content'},
+        div({ id:'content' },
             html,
-            div({ class:'container' },
-                div({ class:classJoin('columns col-12 centered', classes.center) },
-                    img({ class:classes.image, src:'/assets/ava.png' })
-                )
+            div({ class:classJoin('centered', classes.center) },
+                canvas({ class:classes.canvas })
             ),
             div({ class:'container' },
                 div({ class:'columns' },
@@ -39,6 +40,7 @@ const about = () => {
     $('#content').hide().fadeIn(500);
     cb();
     $.ajax({ url: '/text/about', success: html => $('.content').html(html) });
+    tetris($('canvas').get(0));
 };
 
 module.exports = about;

@@ -35,7 +35,7 @@ const navLink = (text, link='#', margin='2vw') => {
 
     const attr = {
         href, target, onclick,
-        class:classJoin('btn', 'btn-link', classes.link),
+        class:classJoin('btn', 'btn-link anaglyph', classes.link),
         style:`margin:${margin};`
     };
     return a(attr, h4({ class:classes.text }, text));
