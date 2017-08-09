@@ -38,7 +38,7 @@ const about = () => {
     );
     $('#content').hide().fadeIn(500);
     cb();
-    $.ajax({ url: '/content/about', success: html => $('.content').html(html) });
+    $.ajax({ url: '/text/about', success: html => $('.content').html(html) });
 };
 
 module.exports = about;
