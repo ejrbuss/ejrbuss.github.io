@@ -36,7 +36,7 @@ const home = () => {
             const { header, section, div, a, i } = domjs.ns;
             $(document.body).css({ overflow: 'hidden' });
             document.body.appendChild(
-                a({ id:'clickable' },
+                a({ id:'clickable', href:'#' },
                     div({ id:'content' },
                         header({ class:classJoin('navbar', classes.navbar) },
                             section({ class:classJoin('navbar-section', classes.navbar) },
