@@ -26,7 +26,7 @@ const { classes }    = style({
     }
 });
 
-const navLink = (text, link='#', margin='2em') => {
+const navLink = (text, link='#', margin='2vw') => {
 
     const internal = link.startsWith('/');
     const href     = internal ? '#' : link;
@@ -42,6 +42,6 @@ const navLink = (text, link='#', margin='2em') => {
 };
 
 
-const iconLink = (text, href, margin) => navLink(text, href, '1em');
+const iconLink = (text, href, margin) => navLink(text, href, '1vw');
 
 module.exports = { navLink, iconLink };

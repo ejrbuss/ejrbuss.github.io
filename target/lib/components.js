@@ -25,7 +25,7 @@ var classes = style({
 }).classes;
 var navLink = function (text, link, margin) {
     if (link === void 0) { link = '#'; }
-    if (margin === void 0) { margin = '2em'; }
+    if (margin === void 0) { margin = '2vw'; }
     var internal = link.startsWith('/');
     var href = internal ? '#' : link;
     var target = internal ? '' : '_blank';
@@ -37,6 +37,6 @@ var navLink = function (text, link, margin) {
     };
     return a(attr, h4({ class: classes.text }, text));
 };
-var iconLink = function (text, href, margin) { return navLink(text, href, '1em'); };
+var iconLink = function (text, href, margin) { return navLink(text, href, '1vw'); };
 module.exports = { navLink: navLink, iconLink: iconLink };
 //# sourceMappingURL=components.js.map
