@@ -123,7 +123,8 @@ var onWindowResize = function () {
 };
 var onDocumentMouseMove = function (e) {
     if (e.type == 'touchstart') {
-        var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        var touch = e.originalEvent.touches[0] ||
+            e.originalEvent.changedTouches[0];
         e.clientX = touch.pageX;
         e.clientY = touch.pageY;
     }

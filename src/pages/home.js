@@ -36,26 +36,26 @@ const home = () => {
             const { header, section, div, a, i } = domjs.ns;
             $(document.body).css({ overflow: 'hidden' });
             document.body.appendChild(
-                div({ id:'content' },
-                    header({ class:classJoin('navbar', classes.navbar) },
-                        section({ class:classJoin('navbar-section', classes.navbar) },
-                            div({ class:'centerd text-center', style:'width:100%;' },
-                                navLink('work',  links.work),
-                                navLink('about', links.about),
-                                navLink('blog',  links.blog)
-                            )
-                    )),
-                    header({ class:classJoin('navbar', classes.footer) },
-                        section({ class:classJoin('navbar-section', classes.navbar) },
-                            div({ class:'centerd text-center', style:'width:100%;' },
-                                iconLink(i({ class:'fa fa-twitter',  'aria-hidden':true }), links.twitter),
-                                iconLink(i({ class:'fa fa-github',   'aria-hidden':true }), links.github),
-                                iconLink(i({ class:'fa fa-linkedin', 'aria-hidden':true }), links.linkedin)
-                            )
-                    )),
-                    init(document.body),
-
-            ));
+                a({ id:'clickable' },
+                    div({ id:'content' },
+                        header({ class:classJoin('navbar', classes.navbar) },
+                            section({ class:classJoin('navbar-section', classes.navbar) },
+                                div({ class:'centerd text-center', style:'width:100%;' },
+                                    navLink('work',  links.work),
+                                    navLink('about', links.about),
+                                    navLink('blog',  links.blog)
+                                )
+                        )),
+                        header({ class:classJoin('navbar', classes.footer) },
+                            section({ class:classJoin('navbar-section', classes.navbar) },
+                                div({ class:'centerd text-center', style:'width:100%;' },
+                                    iconLink(i({ class:'fa fa-twitter',  'aria-hidden':true }), links.twitter),
+                                    iconLink(i({ class:'fa fa-github',   'aria-hidden':true }), links.github),
+                                    iconLink(i({ class:'fa fa-linkedin', 'aria-hidden':true }), links.linkedin)
+                                )
+                        )),
+                        init(document.body),
+            )));
             $('#content').hide();
             $('canvas').addClass(classes.canvas);
             animate();
