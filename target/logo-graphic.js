@@ -122,6 +122,11 @@ var onWindowResize = function () {
     renderer.setSize(width, height);
 };
 var onDocumentMouseMove = function (e) {
+    if (e.type == 'touchstart') {
+        var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        e.clientX = touch.pageX;
+        e.clientY = touch.pageY;
+    }
     mouseX = (e.clientX - hwidth) * 10;
     mouseY = (e.clientY - hheight) * 10;
     var delta = Math.abs(mouseX) + Math.abs(mouseY);

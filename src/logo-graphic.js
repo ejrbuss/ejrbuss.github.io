@@ -135,6 +135,13 @@ const onWindowResize = () => {
 };
 
 const onDocumentMouseMove = e => {
+    if(e.type == 'touchstart') {
+        const touch =
+            e.originalEvent.touches[0] ||
+            e.originalEvent.changedTouches[0];
+        e.clientX = touch.pageX;
+        e.clientY = touch.pageY;
+    }
     mouseX      = (e.clientX - hwidth)  * 10;
     mouseY      = (e.clientY - hheight) * 10;
     const delta = Math.abs(mouseX) + Math.abs(mouseY);
