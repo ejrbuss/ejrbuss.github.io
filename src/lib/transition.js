@@ -41,15 +41,16 @@ const { classes } = style({
     }, icon: {
         padding:    0,
         margin:     '2em',
-        width:      '8vh',
-        height:     '8vh',
         display:    'block',
         position:   'fixed',
         cursor:     'pointer',
     }, svg: {
-        width:  '8vh',
-        height: '8vh',
-        filter: 'drop-shadow(-3px 0 1px rgb(30,242,241)), drop-shadow(3px 0 1px rgb(246,5,10))'
+        width:     '8vh',
+        height:    '8vh',
+        minWidth:  '50px',
+        minHeight: '50px',
+        margin:    'auto',
+        filter:    'drop-shadow(-3px 0 1px rgb(30,242,241)), drop-shadow(3px 0 1px rgb(246,5,10))'
     }
 });
 
