@@ -19,8 +19,6 @@ const about = () => {
     const { div, img } = domjs.ns;
     const [ html, cb ] = icon();
 
-    console.log('what?');
-
     document.body.appendChild(
         div({ id:'content'},
             html,
