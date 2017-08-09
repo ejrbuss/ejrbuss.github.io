@@ -110,6 +110,7 @@ var init = function (container) {
     // Handlers
     window.addEventListener('resize', onWindowResize, false);
     document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('touchstart', onDocumentMouseMove, false);
     return renderer.domElement;
 };
 var onWindowResize = function () {

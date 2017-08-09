@@ -118,8 +118,9 @@ const init = container => {
     effect  .setSize(width, height);
 
     // Handlers
-    window  .addEventListener('resize',    onWindowResize,      false);
-    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    window  .addEventListener('resize',     onWindowResize,      false);
+    document.addEventListener('mousemove',  onDocumentMouseMove, false);
+    document.addEventListener('touchstart', onDocumentMouseMove, false);
 
     return renderer.domElement;
 };
