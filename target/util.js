@@ -32,6 +32,9 @@ var compose = curry(function () {
 var style = function (style) {
     return jss.createStyleSheet(style).attach();
 };
+var singleStyle = function (style) {
+    return jss.createStyleSheet({ style: style }).attach().classes.style;
+};
 /** print  **/
 var print = function (obj) {
     return (console.log(obj), obj);
@@ -78,13 +81,26 @@ var classJoin = function () {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    return args.join(' ');
+    return args.filter(type.not.undefined).join(' ');
 };
+/** extendElement */
+var extendElement = curry(function (el, attr) { return function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (type(args[0]).object) {
+        var classes = classJoin(attr.class, args[0].class);
+        Object.assign(attr, args.shift());
+        attr.class = classes;
+    }
+    return el.apply(void 0, [attr].concat(args));
+}; });
 module.exports = {
     flatMap: curry(require('1-liners/flatMap')),
     map: curry(require('1-liners/map')),
     split: curry(require('1-liners/split')),
     prop: curry(require('1-liners/property')),
-    curry: curry, compose: compose, style: style, print: print, match: match, contains: contains, range: range, classJoin: classJoin
+    curry: curry, compose: compose, style: style, singleStyle: singleStyle, print: print, match: match, contains: contains, range: range,
+    classJoin: classJoin, extendElement: extendElement
 };
-//# sourceMappingURL=util.js.map

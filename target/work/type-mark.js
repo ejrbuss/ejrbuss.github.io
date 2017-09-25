@@ -19,4 +19,3 @@ var page = function () {
     return (div({ class: 'container' }, div({ class: 'columns' }, div({ class: classJoin('column col-xs-12 col-md-6', classes.col) }, div({ class: classes.inner }, logo)), div({ class: classJoin('column col-xs-12 col-md-6 text-center', classes.col) }, div({ class: classes.inner }, 'alkdfnhoasdfjnasofajndiaspdfoajsdopfkasofjoasdfjpasjdfpasjdfpoasjdf')))));
 };
 module.exports = page;
-//# sourceMappingURL=type-mark.js.map

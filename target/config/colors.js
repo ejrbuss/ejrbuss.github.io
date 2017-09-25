@@ -4,4 +4,3 @@ module.exports = {
     secondary: '#e3e3e3',
     accent: '#F44336'
 };
-//# sourceMappingURL=colors.js.map

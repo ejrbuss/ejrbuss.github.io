@@ -1,13 +1,12 @@
 {
     "name": "ejrbuss.github.io",
     "version": "1.0.0",
-    "description": "Testing github.io",
-    "main": "index.js",
+    "description": "ejrbuss.net source",
+    "main": "src/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "site": "jekyll serve",
-        "build-dev": "tsc && browserify target/index.js -o js/bundle.js",
-        "build": "tsc && browserify target/index.js | uglifyjs > js/bundle.js"
+        "build": "gulp build-css && tsc && browserify target/index.js | uglifyjs > js/bundle.js"
     },
     "repository": {
         "type": "git",
@@ -18,20 +17,24 @@
     "bugs": {
         "url": "https://github.com/ejrbuss/ejrbuss.github.io/issues"
     },
-    "homepage": "https://github.com/ejrbuss/ejrbuss.github.io#readme",
+    "homepage": "http://ejrbuss.net",
     "dependencies": {
         "1-liners": "^0.4.0",
         "browserify": "^14.4.0",
         "detector-webgl": "^2.0.0",
         "domjs": "^0.3.2",
+        "gulp": "^3.9.1",
+        "gulp-concat": "^2.6.1",
+        "gulp-minify-css": "^1.2.4",
+        "gulp-sass": "^3.1.0",
         "jquery": "^3.2.1",
         "jss": "^9.0.0-pre",
         "jss-preset-default": "^3.0.0",
         "memoizee": "^0.4.5",
+        "streamqueue": "^1.1.1",
         "three": "^0.86.0",
         "three-orbit-controls": "^82.1.0",
-        "type-mark": "^2.0.0",
-        "velocity-animate": "^1.5.0"
+        "type-mark": "^2.0.0"
     },
     "devDependencies": {
         "@types/node": "^8.0.19",

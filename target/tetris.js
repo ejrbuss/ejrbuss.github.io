@@ -297,4 +297,3 @@ var tetris = function (canvas) {
     run();
 };
 module.exports = tetris;
-//# sourceMappingURL=tetris.js.map

@@ -1,8 +1,6 @@
 ---
 layout: null
 ---
-# about.
-
 I am Eric Buss. I am a developer, designer, and soon to be Software Engineer.
 I have a love for programming language design, functional programming, open
 source projects, and horror movies.
@@ -17,7 +15,7 @@ source projects, and horror movies.
     ubuntu
     openSUSE]
 
-For more information feel free to contact me or look at my [resume]().
+For more information feel free to contact me or look at my [resume](/text/resume.pdf).
 
 ### contact.
 

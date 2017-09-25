@@ -8,7 +8,9 @@ var links = {
     index: '/',
     work: '/work',
     about: '/about',
-    blog: '/blog'
+    blog: '/blog',
+    // Tests
+    internal: function (link) { return link && link.startsWith('/'); },
+    external: function (link) { return link && !link.startsWith('/'); }
 };
 module.exports = links;
-//# sourceMappingURL=links.js.map

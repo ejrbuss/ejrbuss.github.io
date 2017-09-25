@@ -31,7 +31,7 @@ var zeroClamp = function (value) {
     return 0;
 };
 var _b = screenStats(), hwidth = _b.hwidth, hheight = _b.hheight;
-var init = function (container) {
+var init = function () {
     var _a = screenStats(), width = _a.width, height = _a.height, aspect = _a.aspect;
     var f = config.factor / config.divisions;
     // Camera
@@ -145,4 +145,3 @@ var render = function () {
 };
 var animate = function () { return (requestAnimationFrame(animate), render()); };
 module.exports = { init: init, animate: animate };
-//# sourceMappingURL=logo-graphic.js.map

@@ -6,8 +6,7 @@ global.THREE  = require('three');
 global.jQuery = require('jQuery');
 global.$      = jQuery;
 
-const eventMap = {};
-
+// Page dispatch
 $(document).ready(() => {
     match(location.href)(
         contains('work'),  require('./pages/work'),

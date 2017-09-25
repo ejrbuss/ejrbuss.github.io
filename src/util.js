@@ -16,6 +16,8 @@ const compose = curry((...fns) =>
 /**  jss **/
 const style = style =>
     jss.createStyleSheet(style).attach();
+const singleStyle = style =>
+    jss.createStyleSheet({ style }).attach().classes.style;
 /** print  **/
 const print = obj =>
     (console.log(obj), obj);
@@ -52,12 +54,22 @@ const range = (start, end) => {
     return Array.from({length: (end - start)}, (v, k) => k + start);
 }
 /** classAdd **/
-const classJoin = (...args) => args.join(' ');
+const classJoin = (...args) => args.filter(type.not.undefined).join(' ');
+/** extendElement */
+const extendElement = curry((el, attr) => (...args) => {
+    if(type(args[0]).object) {
+        const classes = classJoin(attr.class, args[0].class);
+        Object.assign(attr, args.shift());
+        attr.class = classes;
+    }
+    return el(attr, ...args);
+});
 
 module.exports = {
     flatMap:    curry(require('1-liners/flatMap')),
     map:        curry(require('1-liners/map')),
     split:      curry(require('1-liners/split')),
     prop:       curry(require('1-liners/property')),
-    curry, compose, style, print, match, contains, range, classJoin
+    curry, compose, style, singleStyle,  print, match, contains, range,
+    classJoin, extendElement
 }

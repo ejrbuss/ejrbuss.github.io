@@ -6,4 +6,3 @@ var blog = function () {
     $('#content').hide().fadeIn(500);
 };
 module.exports = blog;
-//# sourceMappingURL=blog.js.map

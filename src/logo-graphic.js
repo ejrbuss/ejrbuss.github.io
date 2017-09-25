@@ -34,7 +34,7 @@ const zeroClamp = value=> {
 
 let { hwidth, hheight } = screenStats();
 
-const init = container => {
+const init = () => {
 
     const { width, height, aspect } = screenStats();
     const f = config.factor / config.divisions;

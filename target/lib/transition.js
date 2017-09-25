@@ -3,9 +3,9 @@ var links = require('../config/links');
 var anime = require('./anime');
 var domjs = require('domjs')(document);
 var $ = require('jquery');
-var iconLink = require('../lib/components').iconLink;
-var _a = require('../util'), style = _a.style, classJoin = _a.classJoin;
-var _b = domjs.ns, div = _b.div, hr = _b.hr, i = _b.i;
+var _a = require('../lib/components'), iconLink = _a.iconLink, navLink = _a.navLink;
+var _b = require('../util'), style = _b.style, classJoin = _b.classJoin, extendElement = _b.extendElement;
+var div = domjs.ns.div;
 var withSvg = function (tag) { return function () {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -37,12 +37,6 @@ var classes = style({
         width: '8vh',
         height: '8vh',
         display: 'block',
-    }, icon: {
-        padding: 0,
-        margin: '2em',
-        display: 'block',
-        position: 'fixed',
-        cursor: 'pointer',
     }, svg: {
         width: '8vh',
         height: '8vh',
@@ -52,40 +46,6 @@ var classes = style({
         filter: 'drop-shadow(-3px 0 1px rgb(30,242,241)), drop-shadow(3px 0 1px rgb(246,5,10))'
     }
 }).classes;
-var icon = function () {
-    var el = (div({ id: 'icon', class: classJoin('hide-xs', classes.icon) }, div({ id: 'hitbox' }, svg({ viewBox: '0 0 12 12', class: classes.svg }, poly({ points: '3,1 1,1 1,11, 3,11', style: 'fill:' + colors.background }), poly({ points: '3,11 3,9 11,9 11,11', style: 'fill:' + colors.background }), poly({ points: '11,9 9,9 9,1 11,1', style: 'fill:' + colors.background }), poly({ points: '9,3 9,1 5,1 5,3', style: 'fill:' + colors.background }), poly({ points: '7,3 5,3 5,7 7,7', style: 'fill:' + colors.background }), poly({ class: 'icon-p-1', points: '3,1 1,1 1,1 3,1', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-2', points: '3,11 3,9 3,9 3,11', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-3', points: '11,9 9,9 9,9 11,9', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-4', points: '9,3 9,1 9,1 9,3', style: 'fill:' + colors.accent }), poly({ class: 'icon-p-5', points: '7,3 5,3 5,3 7,3', style: 'fill:' + colors.accent }))), hr(), iconLink(i({ class: 'fa fa-twitter', 'aria-hidden': true, style: 'color:' + colors.background }), links.twitter), hr(), iconLink(i({ class: 'fa fa-github', 'aria-hidden': true, style: 'color:' + colors.background }), links.github), hr(), iconLink(i({ class: 'fa fa-linkedin', 'aria-hidden': true, style: 'color:' + colors.background }), links.linkedin)));
-    var ani = function () { return $('#hitbox').hover(function (e) {
-        $(e.target).off(e);
-        anime.timeline().add({
-            targets: '.icon-p-1',
-            points: '3,1 1,1 1,11, 3,11',
-            duration: '175',
-            easing: 'linear'
-        }).add({
-            targets: '.icon-p-2',
-            points: '3,11 3,9 11,9 11,11',
-            duration: '100',
-            easing: 'linear'
-        }).add({
-            targets: '.icon-p-3',
-            points: '11,9 9,9 9,1 11,1',
-            duration: '75',
-            easing: 'linear'
-        }).add({
-            targets: '.icon-p-4',
-            points: '9,3 9,1 5,1 5,3',
-            duration: '50',
-            easing: 'linear'
-        }).add({
-            targets: '.icon-p-5',
-            points: '7,3 5,3 5,7 7,7',
-            duration: '25',
-            easing: 'linear',
-            complete: function () { return goto(links.home); }
-        });
-    }); };
-    return [el, ani];
-};
 var bottomUp = function (background, callback) {
     $('#transition').remove();
     document.body.appendChild(div({ id: 'transition', class: classes.transition }, div({ id: 'transition-logo', class: classes.logo }, svg({ viewBox: '0 0 12 12', class: classes.svg }, poly({ class: 'logo-p-1', points: '3,1 1,1 1,1 3,1', style: 'fill:' + colors.accent }), poly({ class: 'logo-p-2', points: '3,11 3,9 3,9 3,11', style: 'fill:' + colors.accent }), poly({ class: 'logo-p-3', points: '11,9 9,9 9,9 11,9', style: 'fill:' + colors.accent }), poly({ class: 'logo-p-4', points: '9,3 9,1 9,1 9,3', style: 'fill:' + colors.accent }), poly({ class: 'logo-p-5', points: '7,3 5,3 5,3 7,3', style: 'fill:' + colors.accent })))));
@@ -142,5 +102,4 @@ global.goto = function (href, color) {
         bottomUp(color, function () { location.href = href; });
     }
 };
-module.exports = { bottomUp: bottomUp, icon: icon };
-//# sourceMappingURL=transition.js.map
+module.exports = { bottomUp: bottomUp };

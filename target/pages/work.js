@@ -6,4 +6,3 @@ var work = function () {
     $('#content').hide().fadeIn(500);
 };
 module.exports = work;
-//# sourceMappingURL=work.js.map

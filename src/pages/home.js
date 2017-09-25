@@ -1,68 +1,62 @@
 const colors  = require('../config/colors');
 const links   = require('../config/links');
-const iswebgl = require('detector-webgl');
-const domjs   = require('domjs')(document);
 const $       = require('jquery');
 
-const { bottomUp }          = require('../lib/transition');
-const { navLink, iconLink } = require('../lib/components');
-const { init, animate }     = require('../logo-graphic');
-const { style, classJoin }  = require('../util');
+const Component = require('../components/component');
+const SiteLink  = require('../components/site-link');
+const Webglogo  = require('../components/webglogo');
 
-const { classes } = style({
-        navbar: {
-        zIndex:     100,
-        background: 'none'
-    },
-    footer: {
-        zIndex:     100,
-        marginTop:  'calc(100vh - 14em)',
-        background: 'none'
-    },
-    canvas: {
-        zIndex:   -100,
-        top:      0,
-        left:     0,
-        position: 'fixed',
-        width:    '100vw',
-        height:   '100vh',
-        overflow: 'hidden',
-    }
-});
+const { bottomUp }   = require('../lib/transition');
+const { classJoin }  = require('../util');
 
 const home = () => {
+    $(document.body).css({ overflow: 'hidden' });
     bottomUp(colors.background, () => {
-        if(iswebgl) {
-            const { header, section, div, a, i } = domjs.ns;
-            $(document.body).css({ overflow: 'hidden' });
-            document.body.appendChild(
-                a({ id:'clickable', href:'#' },
+
+        document.body.appendChild(Component((attr, ...rest) => ({
+
+            styles : {
+                navbar : {
+                    zIndex     : 100,
+                    background : 'none'
+                },
+                footer : {
+                    zIndex     : 100,
+                    marginTop  : 'calc(100vh - 14em)',
+                    background : 'none'
+                },
+            },
+
+            html({ header, section, div, a, i }, { navbar, footer }) {
+                return a({ id:'clickable', href:'#' },
                     div({ id:'content' },
-                        header({ class:classJoin('navbar', classes.navbar) },
-                            section({ class:classJoin('navbar-section', classes.navbar) },
+                        header({ class:classJoin('navbar', navbar) },
+                            section({ class:classJoin('navbar-section', navbar) },
                                 div({ class:'centerd text-center', style:'width:100%;' },
-                                    navLink('work',  links.work),
-                                    navLink('about', links.about),
-                                    navLink('blog',  links.blog)
+                                    SiteLink({ href:links.work  }, 'work' ),
+                                    SiteLink({ href:links.about }, 'about'),
+                                    SiteLink({ href:links.blog  }, 'blog' ),
                                 )
                         )),
-                        header({ class:classJoin('navbar', classes.footer) },
-                            section({ class:classJoin('navbar-section', classes.navbar) },
-                                div({ class:'centerd text-center', style:'width:100%;' },
-                                    iconLink(i({ class:'fa fa-twitter',  'aria-hidden':true }), links.twitter),
-                                    iconLink(i({ class:'fa fa-github',   'aria-hidden':true }), links.github),
-                                    iconLink(i({ class:'fa fa-linkedin', 'aria-hidden':true }), links.linkedin)
+                        header({ class:classJoin('navbar', footer) },
+                            section({ class:classJoin('navbar-section', navbar) },
+                                div({ class:'centered text-center', style:'width:100%;' },
+                                    SiteLink({ href:links.twitter  }, i({ class:'fa fa-twitter',  'aria-hidden':true })),
+                                    SiteLink({ href:links.github   }, i({ class:'fa fa-github',   'aria-hidden':true })),
+                                    SiteLink({ href:links.linkedin }, i({ class:'fa fa-linkedin', 'aria-hidden':true }))
                                 )
                         )),
-                        init(document.body),
-            )));
-            $('#content').hide();
-            $('canvas').addClass(classes.canvas);
-            animate();
-            $('#content').fadeIn(1000);
-        } else {
-            document.body.appendChild(document.createTextNode('No webgl >_<'));
-        }
+                        Webglogo()
+                    )
+                );
+            },
+
+            ready() {
+                $('#content').hide();
+                $('#content').fadeIn(1000);
+            }
+
+        }))());
     });
 };
 

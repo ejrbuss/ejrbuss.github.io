@@ -1,6 +1,3 @@
----
----
-
 $background: #000000;
 $foreground: #FFFFFF;
 $secondary:  #e3e3e3;
@@ -8,11 +5,12 @@ $accent:     #F44336;
 
 $primary-color: $accent;
 
-.content {
+.text {
     font-size: 1.2em;
     overflow-y: auto;
 }
 
+// element fixes
 h1 code,
 h2 code,
 h3 code,
@@ -23,37 +21,32 @@ h6 code {
     color: inherit !important;
 }
 
+hr {
+    border-top: .2rem solid #f0f1f4;
+    width: 100%;
+}
+
 .special {
     color: $accent;
     font-weight: bold;
 }
 
-p, h2, h3, h4, h5, h6 {
-    color: $background;
-}
+h1 { color: $accent; }
+p, h2, h3, h4, h5, h6 { color: $background; }
 
-.content h1,
-.content h2,
-.content h3,
-.content h4,
-.content h5,
-.content h6 {
-    font-family: 'Fira Mono';
-}
-h1 {
-    color: $accent;
-}
+// For use in text sections
+.text h1,
+.text h2,
+.text h3,
+.text h4,
+.text h5,
+.text h6 { font-family: 'Fira Mono'; }
 
-.content a {
-    color: $primary-color !important;
-}
-.timeline-icon {
-    background-color: $primary-color !important;
-}
-.nav-item.active {
-    border-left: 2px solid $primary-color;
-}
+.text a { color: $primary-color !important; }
+.timeline-icon { background-color: $primary-color !important; }
+.nav-item.active { border-left: 2px solid $primary-color; }
 
+// Nav styling
 #top-nav {
     background-color:#fff;
     width:100%;
@@ -71,16 +64,16 @@ h1 {
         color: $primary-color;
     }
 }
+// Effect taken from
 // http://enjoycss.com/gallery/text_effects/dZ
 .anaglyph {
     text-overflow: clip;
-    text-shadow: -1px 0 1px rgb(30,242,241), 1px 0 1px rgb(246,5,10);
+    text-shadow:
+        -1px 0 1px rgb(30,242,241),
+         1px 0 1px rgb(246,5,10);
 }
-img.anaglyph {
-  filter: drop-shadow(-1px 0 1px rgb(30,242,241)), drop-shadow(1px 0 1px rgb(246,5,10));
-}
-
-hr {
-    border-top: .2rem solid #f0f1f4;
-    width: 100%;
+.img-anaglyph {
+    filter:
+        drop-shadow(-1px 0 1px rgb(30,242,241))
+        drop-shadow( 1px 0 1px rgb(246,5,10));
 }

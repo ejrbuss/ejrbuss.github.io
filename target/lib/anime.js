@@ -842,4 +842,3 @@ var _this = this;
     anime.random = function (min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
     return anime;
 }));
-//# sourceMappingURL=anime.js.map

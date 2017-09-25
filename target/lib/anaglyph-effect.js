@@ -100,4 +100,3 @@ THREE.AnaglyphEffect = function (renderer, width, height) {
             _renderTargetR.dispose();
     };
 };
-//# sourceMappingURL=anaglyph-effect.js.map
