@@ -11,9 +11,10 @@ module.exports = Component((attr, ...rest) => ({
     styles : {
         nav : {
             background : colors.foreground,
+            padding    : '1em',
             position   : 'fixed',
             width      : '100%',
-            marginLeft : '6vh',
+            boxShadow  : '0 1px 0 0 #eaeaea, 0 2px 0 0 #f3f3f3',
             top        : 0,
         },
         logo : {
@@ -24,7 +25,7 @@ module.exports = Component((attr, ...rest) => ({
             height      : '6vh',
             minWidth    : '25px',
             minHeight   : '25px',
-            transition  : 'width 0.2s, min-width 0.2s, height 0.2s, min-height 0.2s',
+            transition  : 'width 0.1s, min-width 0.1s, height 0.1s, min-height 0.1s',
             padding     : 0,
             '&.shrink'  : {
                 width     : 0,
@@ -37,13 +38,13 @@ module.exports = Component((attr, ...rest) => ({
             margin     : '1vw',
             transition : 'margin 0.2s',
             '&.shrink' : {
-                margin : '0.4vw',
+                margin : '0.7vw',
             }
         },
         title : {
             display    : 'inline-block',
             fontFamily : 'Fira Mono',
-            transition : 'font-size 0.2s',
+            transition : 'font-size 0.1s',
             textShadow : 'none',
             '&.shrink' : {
                 fontSize : 0
@@ -54,7 +55,7 @@ module.exports = Component((attr, ...rest) => ({
             fontSize   : '2.4rem',
             transition : 'font-size 0.2s',
             '&.shrink' : {
-                fontSize : '1.6rem',
+                fontSize : '2.0rem',
             }
         },
     },
@@ -70,23 +71,21 @@ module.exports = Component((attr, ...rest) => ({
         // Return html
         return header({ class:classJoin('navbar', nav) },
             section({ class:'navbar-section' },
-                div(
+                div({ class:'hide-md' },
                     SiteLink({ styles:{ link }, href: links.home, class:logo, hover:false },
                         img({ class:logo, src:'/assets/ava.png', alt:'home' }),
                         h1({ class:title }, attr.page + '.')
-                    ),
-                    br(),
-                    SiteLink({ styles:{ link, text }, href:links.home  },
-                        'home'),
-                    SiteLink({ class:attr.page === 'work' ? 'active' : '', styles:{ link, text }, href:links.work  },
-                        'work' ),
-                    SiteLink({ class:attr.page === 'about' ? 'active' : '', styles:{ link, text }, href:links.about },
-                        'about'),
-                    SiteLink({ class:attr.page === 'blog' ? 'active' : '', styles:{ link, text }, href:links.blog  },
-                        'blog' )
+                    )
                 )
             ),
-            section({ class:'navbar-center' }),
+            section({ class:'navbar-center' },
+                SiteLink({ class:attr.page === 'work' ? 'active' : '', styles:{ link, text }, href:links.work  },
+                    'work' ),
+                SiteLink({ class:attr.page === 'about' ? 'active' : '', styles:{ link, text }, href:links.about },
+                    'about'),
+                SiteLink({ class:attr.page === 'blog' ? 'active' : '', styles:{ link, text }, href:links.blog  },
+                    'blog' )
+                    ),
             section({ class:'navbar-section' })
         );
     },

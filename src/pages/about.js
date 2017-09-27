@@ -14,16 +14,26 @@ const about = () => {
     document.body.appendChild(Component((attr, ...rest) => ({
 
         styles : {
-            columns : {
-                marginTop: '18vh'
+            center: {
+                margin    : 'auto',
+                marginTop : '10vh',
+                width     : '100%'
+            },
+            tetris : {
+                width      : '40vh',
+                height     : '40vh',
+                marginLeft : 'calc(50vw - 20vh)'
             }
         },
 
-        html({ div, canvas }, { columns }) {
+        html({ div, canvas }, { center, tetris }) {
             return div({ id:'content' },
                 SiteNav({ page:'about' }),
+                div({ class:classJoin('centered', center) },
+                    canvas({ class:tetris })
+                ),
                 div({ class:'container' },
-                    div({ class:classJoin(columns, 'columns') },
+                    div({ class:'columns' },
                         div({ class:'column hide-md col-1' }),
                         div({ class:'column hide-md col-2' } /* nav would go here */),
                         div({ class:'column hide-xs show-md col-md-2 col-1'}),
@@ -36,6 +46,7 @@ const about = () => {
         ready() {
             $('#content').hide().fadeIn(500);
             $.ajax({ url: '/text/about', success: html => $('.text').append(html) });
+            tetris($('canvas').get(0));
         }
 
     }))());
