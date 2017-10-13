@@ -6,5 +6,5 @@ global.jQuery = require('jQuery');
 global.$ = jQuery;
 // Page dispatch
 $(document).ready(function () {
-    match(location.href)(contains('work'), require('./pages/work'), contains('about'), require('./pages/about'), contains('blog'), require('./pages/blog'), match.else, require('./pages/home'));
+    match(location.href)(contains('work'), require('./pages/blog'), contains('about'), require('./pages/about'), contains('blog'), require('./pages/blog'), match.else, require('./pages/home'));
 });

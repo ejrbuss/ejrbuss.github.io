@@ -23,17 +23,12 @@ module.exports = Component(function (attr) {
                 margin: '-0.5em',
                 marginRight: '1em',
                 marginLeft: '0.5em',
-                width: '6vh',
-                height: '6vh',
-                minWidth: '25px',
-                minHeight: '25px',
-                transition: 'width 0.1s, min-width 0.1s, height 0.1s, min-height 0.1s',
+                width: '2em',
+                height: '2em',
                 padding: 0,
                 '&.shrink': {
                     width: 0,
                     height: 0,
-                    minWidth: 0,
-                    minHeight: 0
                 }
             },
             link: {
@@ -44,9 +39,11 @@ module.exports = Component(function (attr) {
                 }
             },
             title: {
+                position: 'relative',
+                paddingLeft: '0.75em',
+                top: '0.25em',
                 display: 'inline-block',
                 fontFamily: 'Fira Mono',
-                transition: 'font-size 0.1s',
                 textShadow: 'none',
                 '&.shrink': {
                     fontSize: 0
@@ -72,7 +69,7 @@ module.exports = Component(function (attr) {
                 text = attr.styles.text || text;
             }
             // Return html
-            return header({ class: classJoin('navbar', nav) }, section({ class: 'navbar-section' }, div({ class: 'hide-md' }, SiteLink({ styles: { link: link }, href: links.home, class: logo, hover: false }, img({ class: logo, src: '/assets/ava.png', alt: 'home' }), h1({ class: title }, attr.page + '.')))), section({ class: 'navbar-center' }, SiteLink({ class: attr.page === 'work' ? 'active' : '', styles: { link: link, text: text }, href: links.work }, 'work'), SiteLink({ class: attr.page === 'about' ? 'active' : '', styles: { link: link, text: text }, href: links.about }, 'about'), SiteLink({ class: attr.page === 'blog' ? 'active' : '', styles: { link: link, text: text }, href: links.blog }, 'blog')), section({ class: 'navbar-section' }));
+            return header({ class: classJoin('navbar', nav) }, section({ class: 'navbar-section' }, div({ class: 'hide-md' }, SiteLink({ styles: { link: link }, href: links.home, class: logo, hover: false }, img({ class: logo, src: '/assets/ava.png', alt: 'home' })), h1({ class: title }, attr.page + '.'))), section({ class: 'navbar-center' }, SiteLink({ class: attr.page === 'work' ? 'active' : '', styles: { link: link, text: text }, href: links.work }, 'work'), SiteLink({ class: attr.page === 'about' ? 'active' : '', styles: { link: link, text: text }, href: links.about }, 'about'), SiteLink({ class: attr.page === 'blog' ? 'active' : '', styles: { link: link, text: text }, href: links.blog }, 'blog')), section({ class: 'navbar-section' }));
         },
         ready: function () {
             var _this = this;

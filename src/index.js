@@ -9,7 +9,7 @@ global.$      = jQuery;
 // Page dispatch
 $(document).ready(() => {
     match(location.href)(
-        contains('work'),  require('./pages/work'),
+        contains('work'),  require('./pages/blog'),
         contains('about'), require('./pages/about'),
         contains('blog'),  require('./pages/blog'),
         match.else,        require('./pages/home')

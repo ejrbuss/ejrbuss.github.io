@@ -99,7 +99,7 @@ global.goto = function (href, color) {
         location.href = href;
     }
     else {
-        bottomUp(color, function () { location.href = href; });
+        bottomUp(color, function () { return location.href = href; });
     }
 };
 module.exports = { bottomUp: bottomUp };

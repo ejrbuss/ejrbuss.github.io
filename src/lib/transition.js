@@ -110,8 +110,9 @@ global.goto = (href, color = colors.foreground) => {
     if(href === links.home) {
         location.href = href;
     } else {
-        bottomUp(color, () => { location.href = href; });
+        bottomUp(color, () => location.href = href);
     }
 };
+
 
 module.exports = { bottomUp };
