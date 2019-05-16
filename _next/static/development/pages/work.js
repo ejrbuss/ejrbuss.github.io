@@ -597,6 +597,7 @@ var _jsxFileName = "/Users/ejrbuss/GitHub/ejrbuss.net-source/components/Love.js"
     },
     __self: this
   }), " using ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    target: "_blank",
     href: "https://nextjs.org/",
     className: "subtle",
     __source: {
@@ -605,6 +606,7 @@ var _jsxFileName = "/Users/ejrbuss/GitHub/ejrbuss.net-source/components/Love.js"
     },
     __self: this
   }, "Nextjs"), ", ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    target: "_blank",
     href: "https://picturepan2.github.io/spectre/index.html",
     className: "subtle",
     __source: {
