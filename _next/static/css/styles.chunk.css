@@ -70,6 +70,18 @@ body .content h5,
 body .content h6 {
   font-weight: 300;
 }
+body .content img {
+  display: block;
+  max-width: 100%;
+  margin: auto;
+}
+body .content .math {
+  margin-bottom: 1.2rem;
+  text-align: center;
+  font-style: italic;
+  font-family: "Times New Roman", serif;
+  letter-spacing: 0.05em;
+}
 body .ignore {
   pointer-events: none;
 }
@@ -697,6 +709,7 @@ body .side-nav {
   position: fixed;
   top: 80px;
   padding: 16px;
+  left: 16px;
 }
 body .side-nav .nav-item {
   border-left: 1px solid transparent;
