@@ -563,6 +563,9 @@ body .example .uofa path.b {
 body .example .uofa path.c {
   fill: white;
 }
+body .example .go path {
+  fill: black;
+}
 body .example:hover svg,
 body .example:hover img {
   transform: scale(1.1);
