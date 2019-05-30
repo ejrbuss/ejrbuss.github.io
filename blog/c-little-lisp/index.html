@@ -1,0 +1,262 @@
+<!DOCTYPE html><html><head><script src="/static/js/cll.js" class="next-head"></script><title class="next-head">C Little Lisp</title><meta charSet="UTF-8" class="next-head"/><meta name="description" content="" class="next-head"/><meta name="keywords" content="" class="next-head"/><meta name="author" content="Eric Buss" class="next-head"/><meta name="viewport" content="width=device-width, initial-scale=1.0" class="next-head"/><link rel="shortcut icon" href="/static/favicon.ico" class="next-head"/><link rel="stylesheet" href="/static/css/github.css" class="next-head"/><link rel="stylesheet" href="/static/css/spectre.min.css" class="next-head"/><link rel="stylesheet" href="/static/css/spectre-exp.min.css" class="next-head"/><link rel="stylesheet" href="/static/css/font-awesome.min.css" class="next-head"/><link rel="stylesheet" href="/static/css/animate.css" class="next-head"/><script src="/static/js/es5-shim.min.js" class="next-head"></script><script src="/static/js/es6-shim.min.js" class="next-head"></script><script src="/static/js/object-shim.js" class="next-head"></script><link rel="preload" href="/_next/static/P8USzISEf7rdf~FIp5KnP/pages/blog/c-little-lisp.js" as="script"/><link rel="preload" href="/_next/static/P8USzISEf7rdf~FIp5KnP/pages/_app.js" as="script"/><link rel="preload" href="/_next/static/P8USzISEf7rdf~FIp5KnP/pages/_error.js" as="script"/><link rel="preload" href="/_next/static/runtime/webpack-f4542de9ce6104e90191.js" as="script"/><link rel="preload" href="/_next/static/chunks/commons.2ccf073e64d3d8a62c5c.js" as="script"/><link rel="preload" href="/_next/static/runtime/main-98aa4765ad2a12a28472.js" as="script"/><link rel="stylesheet" href="/_next/static/css/commons.eed36b44.chunk.css"/></head><body><div id="__next"><div id="page"><header class="navbar"><div class="scroll-marker" style="width:NaN%"></div><section class="navbar-section container grid-md"><a class="navbar-brand m-lg ml-clr" href="/index/"><div class="logo"><svg style="width:40px;height:40px" class="logo" viewBox="0 0 11 11" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 V10 H10 V2 H6 V7" stroke="rgb(0, 0, 0)" stroke-width="2" fill="transparent"></path><path class="path" d="M2 1 V10 H10 V2 H6 V7" stroke="rgb(244, 66, 55)" stroke-width="2.3" fill="transparent"></path></svg></div></a><a class="m-md slide " href="/work/">WORK</a><a class="m-md slide " href="/about/">ABOUT</a><a class="m-md slide active" href="/blog/">BLOG</a><div class="fill-width"><div class="float-right hide-xs text-sm center"><input type="text" placeholder="Type to search..." value="" class="closed"/><a class="p-md subtle-accent"><i class="fas fa-search fa-lg"></i></a><a target="_blank" href="https://github.com/ejrbuss" class="p-md subtle-accent"><i class="fab fa-github fa-lg"></i></a></div><div class="search hide-xs text-sm "></div></div></section></header><div class="side-nav hide-xl"><ul class="nav outer d-inline-block text-left"></ul></div><div class="search-results"><div class="container grid-md"></div></div><div class="content container grid-md"><h1 class="title">C Little Lisp</h1><p class="cslr-subtext text-lg">Writing a little lisp in C from scratch and running it on the web</p><p class="subtext"><a class="anchor"><i class="far fa-calendar"></i> <!-- -->May 28 2019</a></p><div class="md indexable"><blockquote><p><strong>Note</strong>
+The source code for C Little Lisp can be found in <a href="https://github.com/ejrbuss/cll">this repository</a>. All cll examples in this post can be edited and run by you! </p></blockquote><a class="anchor-point" id="introduction"></a><a class="anchor" href="#introduction"><h1>Introduction</h1><br/></a><p>I love lisp. I&#x27;ll freely admit it. It&#x27;s simplicity to the max. Unfamiliar with this family of languages? Well simply take your typical C style function call</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span></div><div class="text"><pre>my_function(arg1, arg2, arg3);</pre></div></div></div><p>Now move the bracket, get rid of all that punctuation, and throw in kebab-case for good measure</p><div class="editor"><div class="code" data-lang="lisp"><div class="gutter"><span class="line-number">1</span></div><div class="text"><pre>(<span class="hljs-name">my-function</span> arg1 arg2 arg3)</pre></div></div></div><p>Now you have a lisp! Well, there&#x27;s a lot more to it then that. Well, it&#x27;s more that there isn&#x27;t a lot more to it than that. Where as other programming languages have special syntax for classes, if statements, loops, and more, lisp has the <a href="https://en.wikipedia.org/wiki/S-expression">S-expr</a>, and that&#x27;s all it has. So imagine if you had to write your C code using only C function calls</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span></div><div class="text"><pre><span class="hljs-keyword">if</span>((<span class="hljs-keyword">and</span>(equal(x, y), greater_than_zero(x)), 
+    then_do(add(x, y)),
+    else_do(sub(x, y))); </pre></div></div></div><p>And you can quickly get a sense for why lisp has a reputation for having too many parentheses, it comes not from moving the parentheses to the left, but writing absolutely everything that&#x27;s possible as an S-expr. The side effect of this design decision is that lisp programs are incredibly easy to parse, interpret, and manipulate.</p><p>C Little Lisp (cll) is a minimal lisp I used to explore the basics of lisp programming at a lower level. How can you handle closures in a language like C? What about garbage collection? Is it possible for such a language to be performant. My little language will answer all these questions.</p><a class="anchor-point" id="thelanguage"></a><a class="anchor" href="#thelanguage"><h1>The Language</h1><br/></a><p>Cll borrows syntax from <a href="https://clojure.org/">Clojure</a>, namely it tries to add some syntactic sugar to objects like lists and maps, but mostly we&#x27;ll be keeping things simple. Clojure is sacrilege to some Schemesters, but I&#x27;ve always like how Clojure looks aesthetically. You&#x27;ll usually see Lisp tutorials opt for the Scheme design as making a fully fledged Scheme is a perfectly tractable solo project.</p><p>So what sorts of things can we do in cll? Well we have basic types like</p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span></div><div class="text"><textarea placeholder="" style="height:0">(println &quot;nil:     &quot; nil, ()) 
+(println &quot;numbers: &quot; 42, 0xFF, 2.17, pi)
+(println &quot;strings: &quot; &quot;Hello,&quot; &quot;World!&quot;)
+(println &quot;keywords:&quot; :x :a-long-keyword)
+(println &quot;symbols: &quot; &#x27;x &#x27;a-long-symbol)</textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>And these can be combined using a few composite types like</p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span></div><div class="text"><textarea placeholder="" style="height:0">(println &quot;lists:        &quot; [1 2 3] (list 1 2 3) (cons 1 (cons 2 (cons 3 nil))))
+(println &quot;dictionaries: &quot; { :x 1 :y 2 } (dict :x 1 :y 2))
+(println &quot;refs:         &quot; (ref 1))  </textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>Lists are the foundation of lisp, and cll uses cons cells to represent them. A cons cell is just a simple structure with two pointers, one to the object contained by the cell, and one to the next cell (or nil if there is no next cell). Cons cells are also used to implement dictionaries in cll. This means that all data in cll except for <code>ref</code> and data containing <code>ref</code> are immutable. If you add a key to a dictionary, you are just producing a new dictionary.</p><p>Functions are called using the format <code>(function arg1 arg2 arg3)</code>. In addition to the normal functions, dictionaries or keywords act as lookup functions</p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span></div><div class="text"><textarea placeholder="" style="height:0">(println ({ :x 4 :y 7 } :y))
+(println (:z { :zebra &quot;zebra&quot; :z &quot;z&quot; }))</textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>You may have noticed that there are no booleans in cll. In cll the empty list <code>()</code> (also written as <code>nil</code>) is the only falser value. All other values are truthy. So if we use the special form <code>if</code></p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span></div><div class="text"><textarea placeholder="" style="height:0">(if nil (println &quot;nil is truthy!&quot;) (println &quot;nil is falsey!&quot;))</textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>We see that only the else branch got evaluated. This introduces another concept for lisp, special forms. Special forms have different evaluation semantics than functions. Basically, your arguments may not be evaluated in the way you expect. Some special forms that cll includes are</p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span><span class="line-number">18</span><span class="line-number">19</span><span class="line-number">20</span><span class="line-number">21</span><span class="line-number">22</span><span class="line-number">23</span></div><div class="text"><textarea placeholder="" style="height:0">(println &quot;`def` defines global values&quot;)
+(def x 36)
+(println &quot;x =&quot; x)
+ 
+(println &quot;`fn` creates functions&quot;)
+(def square (fn [x] (* x x)))
+(println &quot;(square x) =&quot; (square x)) 
+
+(println &quot;`do` creates a block that returns its final value&quot;)
+(println (do 
+  (square 1)
+  (square 2)
+  (square 3)
+  (square 4)))
+
+(println &quot;`let` defines local variables and creates a `do` block&quot;)
+(let { x      27 
+       square (fn [y] y) }
+  (println &quot;I can do multiple things!&quot;) 
+  (println &quot;(square x) =&quot; (square x)))
+
+(println &quot;`catch` catches errors&quot;)
+(catch (throw :Error &quot;Oops!&quot;) (fn [err] (println (err :message))))  </textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>There are a few more special forms not shown here, like <code>quote</code>, <code>quasi-quote</code>, <code>macro</code> that help in defining macros. There is also a <code>while</code> macro which can be used in conjunction with references to create more efficient looping structures.</p><p>A final little feature of cll is that function definitions and let expressions allow for the destructuring of lists</p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span></div><div class="text"><textarea placeholder="" style="height:0">(let { [x [y z] &amp; rest] [1 [2 3] 4 5] }
+  (println &quot;x:&quot; x &quot;y:&quot; y &quot;z:&quot; z &quot;rest:&quot; rest))
+((fn [x [y z] &amp; rest]
+  (println &quot;x:&quot; x &quot;y:&quot; y &quot;z:&quot; z &quot;rest:&quot; rest))
+  1 [2 3] 4 5)</textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>The rest of the language is fleshed out in the form of functions and macros. Many common functions are provided like <code>cons</code>, <code>car</code>, <code>cdr</code>, <code>map</code>, <code>each</code>, and <code>reduce</code> for lists. Many math functions like <code>sin</code>, <code>abs</code>, and <code>pow</code> are also available.</p><a class="anchor-point" id="writingtheinterpreter"></a><a class="anchor" href="#writingtheinterpreter"><h1>Writing the Interpreter</h1><br/></a><p>When starting with a blank C project, lisp can seem a long ways off. Most lisp tutorials lean on implementations of lists and dictionaries provided by higher level languages like Python and JavaScript. More importantly these languages usually provide garbage collection out of the box. With C we have to make some important decisions about how we want to represent lisp object.</p><a class="anchor-point" id="objects"></a><a class="anchor" href="#objects"><h2>Objects</h2><br/></a><p>To simplify our code all lisp objects are represented by a single struct named <code>obj</code>. Our goal is to keep <code>obj</code> relatively small as it will be used to represent everything from a number to a cons cell. There is one major exception to this representation method, and that is <code>nil</code>, which will be mapped to <code>NULL</code> in C. </p><p>We will need to know the type of our object so we can handle it correctly so all objects will keep track of their type. The object data can then be kept in a union to try and minimize the overall object size. We could be more clever than this, but this will keep memory management much simpler. A simplified version of the object struct would look like this</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span><span class="line-number">18</span><span class="line-number">19</span><span class="line-number">20</span><span class="line-number">21</span></div><div class="text"><pre><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">obj</span> {</span>
+    <span class="hljs-comment">// The object type</span>
+    <span class="hljs-keyword">char</span> type;
+    <span class="hljs-keyword">union</span> {
+        <span class="hljs-comment">// Resource types</span>
+        <span class="hljs-keyword">char</span> * symbol;
+        <span class="hljs-keyword">char</span> * keyword;
+        <span class="hljs-keyword">char</span> * <span class="hljs-built_in">string</span>;
+        <span class="hljs-comment">// List types (lists and dicts)</span>
+        <span class="hljs-class"><span class="hljs-keyword">struct</span> {</span>
+            obj * car;
+            obj * cdr;
+        };
+        <span class="hljs-comment">// All numbers are represented by C doubles</span>
+        <span class="hljs-keyword">double</span> number;
+        <span class="hljs-comment">// Refs are just pointers to another object</span>
+        obj * ref;
+        <span class="hljs-comment">// A pointer to a native function</span>
+        obj * (*native)(obj *);
+    };
+};</pre></div></div></div><p>In our c code we can use switch statements on the type field to figure out what data fields are safe to access. Now that we have a simple representation for objects we still need a way to allocate them.</p><a class="anchor-point" id="garbagecollection"></a><a class="anchor" href="#garbagecollection"><h2>Garbage Collection</h2><br/></a><p>Garbage collection is a pretty key feature for lisp. All functions in lisp can be closures and it&#x27;s very easy for memory usage to get out of hand. A garbage collector keeps track of what objects are still referenced by the program and frees up the rest. Cll uses the classic mark and sweep algorithm, which isn&#x27;t very efficient, but is easy to implement. </p><p>Every object we allocate we&#x27;ll wrap in a node which we will place on a &quot;heap&quot;. That node will point to the next node and so on, creating a chain that goes through all off our allocated objects. If we run out of room to store objects we will perform mark and sweep. We start with a few root objects, global variables, variables on the stack, etc. and we will mark all objects that those objects can somehow reach. We can cheat a little and just put all our global variables at the top of the stack that way we can have only a single root. We then sweep, iterating over all the objects and free all of the objects that have not been marked. </p><p>The actual cll code has some extra details in it that we haven&#x27;t covered yet. For instance we use a pool allocator for objects, so we can use that pool allocator to walk the heap. We also have to deal with someway of managing the stack by way off stack returns. Here&#x27;s the code for this two step process.</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span><span class="line-number">18</span><span class="line-number">19</span><span class="line-number">20</span><span class="line-number">21</span><span class="line-number">22</span><span class="line-number">23</span><span class="line-number">24</span><span class="line-number">25</span><span class="line-number">26</span><span class="line-number">27</span><span class="line-number">28</span><span class="line-number">29</span><span class="line-number">30</span><span class="line-number">31</span><span class="line-number">32</span><span class="line-number">33</span><span class="line-number">34</span><span class="line-number">35</span><span class="line-number">36</span><span class="line-number">37</span><span class="line-number">38</span><span class="line-number">39</span><span class="line-number">40</span><span class="line-number">41</span><span class="line-number">42</span><span class="line-number">43</span><span class="line-number">44</span><span class="line-number">45</span><span class="line-number">46</span><span class="line-number">47</span><span class="line-number">48</span><span class="line-number">49</span><span class="line-number">50</span><span class="line-number">51</span><span class="line-number">52</span><span class="line-number">53</span><span class="line-number">54</span><span class="line-number">55</span><span class="line-number">56</span><span class="line-number">57</span><span class="line-number">58</span><span class="line-number">59</span><span class="line-number">60</span><span class="line-number">61</span><span class="line-number">62</span><span class="line-number">63</span><span class="line-number">64</span><span class="line-number">65</span><span class="line-number">66</span><span class="line-number">67</span><span class="line-number">68</span></div><div class="text"><pre><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">gc_mark</span><span class="hljs-params">()</span> </span>{
+    assert(g_vm != nil);
+    pool_node * node = g_vm-&gt;<span class="hljs-built_in">stack</span>;
+    <span class="hljs-keyword">while</span> (node != nil) {
+        obj * o = pool_node_chunk(node);
+        <span class="hljs-comment">// We want to skip over stack returns</span>
+        <span class="hljs-keyword">if</span> (o-&gt;gc_tag != gc_stack_return) {
+            o-&gt;gc_tag = gc_unmarked;
+            gc_mark_recursive(o);
+        }
+        node = node-&gt;cdr;
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">gc_mark_recursive</span><span class="hljs-params">(obj * o)</span> </span>{
+    <span class="hljs-keyword">if</span> (o == nil || o-&gt;gc_tag == gc_marked) {
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-comment">// A stack return should never be marked, </span>
+    <span class="hljs-comment">// or have any of its fields inspected</span>
+    assert(o-&gt;gc_tag != gc_stack_return);
+    <span class="hljs-comment">// Mark the object</span>
+    o-&gt;gc_tag = gc_marked;
+    <span class="hljs-comment">// Check for referenced objects</span>
+    <span class="hljs-keyword">switch</span> (o-&gt;type) {
+        <span class="hljs-keyword">case</span> type_reference:
+            gc_mark_recursive(o-&gt;ref);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> type_error:
+        <span class="hljs-keyword">case</span> type_list:
+        <span class="hljs-keyword">case</span> type_dict:
+        <span class="hljs-keyword">case</span> type_macro:
+        <span class="hljs-keyword">case</span> type_function:
+            gc_mark_recursive(o-&gt;car);
+            gc_mark_recursive(o-&gt;cdr);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> type_hash_map: {
+            <span class="hljs-keyword">int</span> I;
+            <span class="hljs-keyword">for</span> (I = <span class="hljs-number">0</span>; I &lt; o-&gt;hash_map-&gt;size; I++) {
+                <span class="hljs-keyword">if</span> (o-&gt;hash_map-&gt;data[I].key != nil) {
+                    gc_mark_recursive(o-&gt;hash_map-&gt;data[I].ptr);
+                }
+            }
+            <span class="hljs-keyword">break</span>;
+        }
+        <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">break</span>;
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">gc_sweep</span><span class="hljs-params">()</span> </span>{
+    assert(g_vm != nil);
+    <span class="hljs-keyword">int</span> c;
+    <span class="hljs-keyword">int</span> chunks =  g_vm-&gt;obj_pool-&gt;chunks;
+    <span class="hljs-keyword">for</span> (c = <span class="hljs-number">0</span>; c &lt; chunks; c++) {
+        obj * o = pool_iter(g_vm-&gt;obj_pool, c);
+        <span class="hljs-keyword">switch</span>(o-&gt;gc_tag) {
+            <span class="hljs-keyword">case</span> gc_marked:
+                o-&gt;gc_tag = gc_unmarked;
+                <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">case</span> gc_unmarked:
+                free_obj(o);
+                <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">default</span>:
+                <span class="hljs-keyword">continue</span>;
+        }
+    }
+}</pre></div></div></div><a class="anchor-point" id="reader/writer"></a><a class="anchor" href="#reader/writer"><h2>Reader/Writer</h2><br/></a><p>Now that lisp objects can be represented in C, the next step to creating a lisp is creating a reader and a writer. A reader <em>reads</em> through strings and converts them into their object counterparts. A writer does precisely the opposite, given a lisp object it produces a string representation. These functions aren&#x27;t particularly interesting, but with them you can produce a basic repl (read eval print loop) that just echoes whatever forms you give it. In cll you can access these functions through <code>read</code> and <code>str</code>.</p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span></div><div class="text"><textarea placeholder="" style="height:0">(println (read &quot;(1 2 3 4)&quot;))
+(println (str &#x27;(1 2 3 4)))</textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><a class="anchor-point" id="eval"></a><a class="anchor" href="#eval"><h2>Eval</h2><br/></a><p>Where the magic of lisp happens is in the <code>eval</code> function. This function takes a lisp object and evaluates it. Most objects just evaluate to themselves, things like numbers, strings, etc. Lists and symbols are special however. Lists are evaluated as functions, and symbols get looked up in a special dictionary called the environment. The cll eval function looks like</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span></div><div class="text"><pre><span class="hljs-function">obj * <span class="hljs-title">eval</span><span class="hljs-params">(obj * expr, obj * env)</span> </span>{
+    <span class="hljs-keyword">if</span> (expr == nil) {
+        <span class="hljs-keyword">return</span> nil;
+    }
+    <span class="hljs-keyword">switch</span> (expr-&gt;type) {
+        <span class="hljs-keyword">case</span> type_list: {
+            obj * result = eval_list(expr, env);
+            <span class="hljs-keyword">if</span> (result != nil &amp;&amp; result-&gt;type == type_error) {
+                result = cons(expr, result);
+                result-&gt;type = type_error;
+            }
+            <span class="hljs-keyword">return</span> result;
+        }
+        <span class="hljs-keyword">case</span> type_symbol: <span class="hljs-keyword">return</span> eval_symbol(expr, env);
+        <span class="hljs-keyword">default</span>:          <span class="hljs-keyword">return</span> expr;
+    }
+}</pre></div></div></div><p>You&#x27;ll notice there is a little extra code to deal with errors, this is so that cll can produce a trace of the error.</p><p>This portion of eval is really quite simple, the bulk of the work gets performed by <code>eval_list</code>. This function has to handle all of the special forms, evaluate the function and the arguments, and call that function. Here&#x27;s an abridged version of <code>eval_list</code></p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span><span class="line-number">18</span><span class="line-number">19</span><span class="line-number">20</span><span class="line-number">21</span><span class="line-number">22</span><span class="line-number">23</span><span class="line-number">24</span><span class="line-number">25</span><span class="line-number">26</span><span class="line-number">27</span><span class="line-number">28</span><span class="line-number">29</span><span class="line-number">30</span><span class="line-number">31</span><span class="line-number">32</span><span class="line-number">33</span><span class="line-number">34</span><span class="line-number">35</span><span class="line-number">36</span><span class="line-number">37</span><span class="line-number">38</span><span class="line-number">39</span></div><div class="text"><pre><span class="hljs-function"><span class="hljs-keyword">static</span> obj * <span class="hljs-title">eval_list</span><span class="hljs-params">(obj * <span class="hljs-built_in">list</span>, obj * env)</span> </span>{
+    prepare_stack();
+
+    obj * op   = FAST_CAR(<span class="hljs-built_in">list</span>);
+    obj * args = FAST_CDR(<span class="hljs-built_in">list</span>);
+
+    <span class="hljs-comment">// Special forms go here</span>
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-comment">// Not a special form, evaluate as a function</span>
+    <span class="hljs-comment">// Eval operator</span>
+    op = eval(op, env);
+
+    <span class="hljs-keyword">if</span> (op == nil) {
+        return_from_stack(THROW_FN_ARG(<span class="hljs-string">"eval"</span>, <span class="hljs-number">1</span>, <span class="hljs-string">"a callable"</span>, op));
+    }
+
+    <span class="hljs-comment">// Propagate error</span>
+    <span class="hljs-keyword">if</span> (op-&gt;type == type_error) {
+        <span class="hljs-keyword">return</span> return_from_stack(op);
+    }
+
+    <span class="hljs-comment">// Expand macros</span>
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-comment">// Eval arguments</span>
+    obj * args_head = nil;
+    obj * args_tail = nil;
+    <span class="hljs-keyword">while</span> (args != nil) {
+        obj * next = eval(FAST_CAR(args), env);
+        <span class="hljs-comment">// If an argument is an error we need to propagate it</span>
+        RETURN_ON_ERROR(next);
+        <span class="hljs-comment">// Otherwise put it onto the evaluated argument list</span>
+        FAST_REV_CONS(args_head, args_tail, next);
+        args = FAST_CDR(args);
+    }
+    <span class="hljs-comment">// Call operator on evaled arguments</span>
+    <span class="hljs-keyword">return</span> return_from_stack(call(op, args_head));
+}</pre></div></div></div><p>There&#x27;s a lot going on here besides just the evaluation. We have to deal with all of the potential error conditions, what if the function we want to call evaluated to an error or to nil? What if one of our arguments evaluated to an error? C is fairly unforgiving for these cases and we could easily produce a segmentation fault if we don&#x27;t consider them, so we need to try and be thorough. You may have also noticed a number of functions like <code>FAST_CDR</code> written in all caps. These were important to performance gains discussed in the next section.</p><a class="anchor-point" id="performance"></a><a class="anchor" href="#performance"><h1>Performance</h1><br/></a><p>Performance was never a priority for cll, however the first iteration of the language was painfully slow. For instance the following code took about 15 seconds on an 8th gen i7. </p><div class="editor"><div class="code" data-lang="cll"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span></div><div class="text"><textarea placeholder="" style="height:0">(defn fib [n]
+  (cond
+    (= n 0) 0
+    (= n 1) 1
+    :else   (+ (fib (- n 1)) (fib (- n 2)))))
+
+(println (str-fmt &quot;takes: {}s&quot;(time-it (fib 20))))</textarea></div></div><div class="output"><a class="subtle-accent clr-text"><i class="fas fa-play fa-lg"></i></a><pre class="text"></pre></div></div><p>Hopefully even translated to JavaScript on your phone that performs significantly better. I used the Mac OS Instruments tool to do some basic profiling and figure out what was making cll so brutally slow.</p><a class="anchor-point" id="abetterallocator"></a><a class="anchor" href="#abetterallocator"><h2>A Better Allocator</h2><br/></a><p>The first thing that stood out when profiling was that for larger programs cll spent all of its time in <code>malloc</code>, like 70-80% of its runtime. So clearly constantly mallocing and freeing objects was not the best solution. </p><p>Considering our object model, there are significantly better allocation schemes available. I opted for a pool (sometimes called a refrigerator allocator). The basic idea is that because all our objects are the same size we can have an allocator that manages of chunks of only that size. At startup we allocate our maximum number of chunks and then we just hand them out as we need them. There are a couple of methods to keeping track of a pool allocator, but one method is to just leave room for a pointer at the top of each chunk, this pointer then points to the next chunk. You then stop the first chunk as the &quot;head&quot; of the allocator. To allocate you just return the chunk pointed to by head and move head to point to the next chunk, to free a chunk you make it the new head and have it point to the old one. This method has an added benefit that when a chunk is allocated we have a free pointer that isn&#x27;t being used. Cll uses this pointer as its garbage collection node.</p><p>Here&#x27;s the generic pool implementation of <code>pool_alloc</code> and <code>pool_free</code></p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span><span class="line-number">18</span></div><div class="text"><pre><span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">pool_alloc</span><span class="hljs-params">(pool * p)</span> </span>{
+    assert(p != nil);
+    <span class="hljs-keyword">if</span> (!pool_can_alloc(p)) {
+        <span class="hljs-keyword">return</span> nil;
+    }
+    pool_node * node = p-&gt;head;
+    p-&gt;head = p-&gt;head-&gt;cdr;
+    <span class="hljs-keyword">return</span> pool_node_chunk(node);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pool_free</span><span class="hljs-params">(pool * p, <span class="hljs-keyword">void</span> * chunk)</span> </span>{
+    assert(p != nil);
+    assert(chunk != nil);
+    pool_node * node = pool_chunk_node(chunk);
+    node-&gt;cdr = p-&gt;head;
+    p-&gt;head = node;
+    <span class="hljs-keyword">return</span>;
+}</pre></div></div></div><p>With the new pool allocator cll performed significantly better. This was by far the greatest performance gain.</p><a class="anchor-point" id="hashmaps"></a><a class="anchor" href="#hashmaps"><h2>Hash Maps</h2><br/></a><p>Looking at the profiler after implementing the pool allocator a large portion of the programs time is spent in <code>car</code>, the function that returns the object pointed to by a cons cell. Looking for which functions produce the most calls to <code>car</code>, two standout <code>eval_list</code> and <code>eval_symbol</code>. The latter is a fairly self explanatory culprit. <code>eval_symbol</code> is called every time a symbol is evaluated, and it has to check through the entire environment, comparing the evaded symbol with every symbol in the environment, every time. This is horribly inefficient. </p><p>Because most of the objects in the current environment are from the global environment, we can drastically improve performance of lookups overall if we improve global lookup. We can do this by storing globals in a hash map. C doesn&#x27;t have any standard hash map implementations, but it&#x27;s not too hard to write our own. We do need to be careful how we manage the objects stored by our hash map, and ensure that we have a way of walking through the hash map to mark all our objects during garbage collection.</p><p>Here&#x27;s the implementation of <code>hash_map_get</code> and <code>hash_map_assoc</code></p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span><span class="line-number">18</span><span class="line-number">19</span><span class="line-number">20</span><span class="line-number">21</span><span class="line-number">22</span><span class="line-number">23</span><span class="line-number">24</span><span class="line-number">25</span><span class="line-number">26</span><span class="line-number">27</span><span class="line-number">28</span><span class="line-number">29</span><span class="line-number">30</span><span class="line-number">31</span><span class="line-number">32</span><span class="line-number">33</span><span class="line-number">34</span></div><div class="text"><pre><span class="hljs-function"><span class="hljs-keyword">void</span> * <span class="hljs-title">hash_map_get</span><span class="hljs-params">(hash_map * h, <span class="hljs-keyword">char</span> * s)</span> </span>{
+    assert(h != nil);
+    <span class="hljs-keyword">int</span> I = hash(s) % h-&gt;size;	
+    <span class="hljs-keyword">while</span>(h-&gt;data[I].key) {
+        <span class="hljs-keyword">if</span> (FAST_CSTR_EQ(s, h-&gt;data[I].key)) {
+            <span class="hljs-keyword">return</span> h-&gt;data[I].ptr;
+        }
+        I++;
+        I %= h-&gt;size;
+    }
+    <span class="hljs-keyword">return</span> NOT_FOUND;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">hash_map_assoc</span><span class="hljs-params">(hash_map * h, <span class="hljs-keyword">char</span> * s, <span class="hljs-keyword">void</span> * ptr)</span> </span>{
+    assert(h != nil);
+    h-&gt;available—;
+    <span class="hljs-comment">// Check if we need more space</span>
+    <span class="hljs-keyword">if</span> (h-&gt;available &lt; (h-&gt;size * RESIZE_FACTOR)) {
+        hash_map_resize(h);
+    }
+    <span class="hljs-keyword">int</span> I = hash(s) % h-&gt;size;	
+    <span class="hljs-keyword">while</span>(h-&gt;data[I].key &amp;&amp; !FAST_CSTR_EQ(s, h-&gt;data[I].key)) {
+        I++;
+        I %= h-&gt;size;
+    }
+    <span class="hljs-keyword">int</span> length = <span class="hljs-built_in">strlen</span>(s);
+    h-&gt;data[I].ptr = ptr;
+    <span class="hljs-keyword">if</span> (alloc_str) {
+        h-&gt;data[I].key = must_malloc(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>) * (length + <span class="hljs-number">1</span>));
+        <span class="hljs-built_in">strcpy</span>(h-&gt;data[I].key, s);
+    } <span class="hljs-keyword">else</span> {
+        h-&gt;data[I].key = s;
+    }
+}</pre></div></div></div><p>With the hash map implementation for global variables time spent in symbol lookup is drastically reduce, but <code>car</code> is still taking up a lot of the computation time. A new rival has also showed up, <code>strcmp</code> is now taking up a drastic percentage of the compute time (20%+).</p><a class="anchor-point" id="stringsand"></a><a class="anchor" href="#stringsand"><h2>Strings and <code>FAST</code></h2><br/></a><p>The final optimization I made to cll was to improve how strings are handled and provide some fast implementations of basic functions. </p><p>The key insight to make is the <code>strcmp</code> does more work than necessary if all we want to do is determine if two strings are equal. So we can start with the <code>strcmp</code> source code and then produce a faster function like the following</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span><span class="line-number">13</span><span class="line-number">14</span><span class="line-number">15</span><span class="line-number">16</span><span class="line-number">17</span></div><div class="text"><pre><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">FAST_CSTR_EQ</span><span class="hljs-params">(<span class="hljs-keyword">char</span> * cs1, <span class="hljs-keyword">char</span> * cs2)</span> </span>{
+    <span class="hljs-comment">// Check if they are both pointing to the same string</span>
+    <span class="hljs-keyword">if</span> (cs1 == cs2) {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-comment">// modified strcmp source https://code.woboq.org/userspace/glibc/string/strcmp.c.html</span>
+    <span class="hljs-keyword">char</span> c1;
+    <span class="hljs-keyword">char</span> c2;
+    <span class="hljs-keyword">do</span> {
+        c1 = *cs1++;
+        c2 = *cs2++;
+        <span class="hljs-keyword">if</span> (c1 == <span class="hljs-string">'\0'</span>) {
+            <span class="hljs-keyword">return</span> c2 == <span class="hljs-string">'\0'</span>;
+        }
+    } <span class="hljs-keyword">while</span> (c1 == c2);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</pre></div></div></div><p>Since our objects are unions, they have a minimum size of two pointers plus two bytes. This means when an object is storing a string we have a whole pointers worth of space to play with. We can use this extra space to store the string length and make equality comparison even faster by checking length first.</p><p>We can also have a problem with operations like <code>car</code> and <code>cdr</code>. Normally we want these functions to check that the object that they receive is a valid type, and handle <code>nil</code> nicely, but sometimes we know ahead of time that the object we are giving the function is valid and don&#x27;t want to pay the performance cost of the checks. To get around this I provide <code>FAST</code> functions and macros for some core operations such as</p><div class="editor"><div class="code" data-lang="c"><div class="gutter"><span class="line-number">1</span><span class="line-number">2</span><span class="line-number">3</span><span class="line-number">4</span><span class="line-number">5</span><span class="line-number">6</span><span class="line-number">7</span><span class="line-number">8</span><span class="line-number">9</span><span class="line-number">10</span><span class="line-number">11</span><span class="line-number">12</span></div><div class="text"><pre><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FAST_CAR(o) (o-&gt;car)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FAST_CDR(o) (o-&gt;cdr)</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FAST_REV_CONS(head, tail, o) <span class="hljs-meta-keyword">if</span> (head == nil) { \
+    head = cons(o, head); \
+    tail = head; \
+} <span class="hljs-meta-keyword">else</span> { \
+    tail = rev_cons(tail, o); \
+}</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FAST_SYMBOL_EQ(o, s) (o != nil \
+    &amp;&amp; o-&gt;type == type_symbol \
+    &amp;&amp; FAST_CSTR_EQ(o-&gt;resource, s) \
+)</span></pre></div></div></div><p>With these optimizations made most of cll&#x27;s compute time is now spent in <code>eval_list</code>, which is where it belongs.</p><a class="anchor-point" id="wheretofromhere"></a><a class="anchor" href="#wheretofromhere"><h1>Where to From Here</h1><br/></a><p>So what&#x27;s next for cll? Well I will probably leave the language alone for awhile, but there is still more that could be done. The language itself is only interpreted and code generation would be an interesting project. Additionally there is a nearly working cll in cll implementation in the examples folder. It seems to be able to run all programs except itself, so a true self-hosting implementation is not quite here.</p><p>More likely, I will take what I&#x27;ve learned from developing cll and create a new language with different ideas. The journey is the point after all. </p></div></div></div><footer><div class="container grid-md"><div class="columns"><div class="column col-3 hide-sm"><a target="_blank" href="https://www.linkedin.com/in/ejrbuss/" class="p-md subtle"><i class="fab fa-linkedin-in fa-lg"></i></a><a target="_blank" href="https://github.com/ejrbuss" class="p-md subtle"><i class="fab fa-github fa-lg"></i></a><a target="_blank" href="https://twitter.com/ejrbuss" class="p-md subtle"><i class="fab fa-twitter fa-lg"></i></a></div><div class="column col-6 col-sm-12"><p class="text-center subtext">Built with <i class="fas fa-heart clr-accent"></i> using <a target="_blank" href="https://nextjs.org/" class="subtle">Nextjs</a>, <a target="_blank" href="https://picturepan2.github.io/spectre/index.html" class="subtle">Spectre.css</a>, &amp; <a href="/blog/site-history" class="subtle">More</a></p></div><div class="column col-3 hide-sm"><p class="text-right subtext">© ejrbuss 2019</p></div></div></div></footer></div><script>__NEXT_DATA__ = {"props":{"pageProps":{}},"page":"/blog/c-little-lisp","query":{},"buildId":"P8USzISEf7rdf~FIp5KnP","nextExport":true};__NEXT_LOADED_PAGES__=[];__NEXT_REGISTER_PAGE=function(r,f){__NEXT_LOADED_PAGES__.push([r, f])}</script><script async="" id="__NEXT_PAGE__/blog/c-little-lisp" src="/_next/static/P8USzISEf7rdf~FIp5KnP/pages/blog/c-little-lisp.js"></script><script async="" id="__NEXT_PAGE__/_app" src="/_next/static/P8USzISEf7rdf~FIp5KnP/pages/_app.js"></script><script async="" id="__NEXT_PAGE__/_error" src="/_next/static/P8USzISEf7rdf~FIp5KnP/pages/_error.js"></script><script src="/_next/static/runtime/webpack-f4542de9ce6104e90191.js" async=""></script><script src="/_next/static/chunks/commons.2ccf073e64d3d8a62c5c.js" async=""></script><script src="/_next/static/runtime/main-98aa4765ad2a12a28472.js" async=""></script></body></html>

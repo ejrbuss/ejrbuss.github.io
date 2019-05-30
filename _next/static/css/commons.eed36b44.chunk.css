@@ -435,6 +435,7 @@ body .editor {
   margin-bottom: 1em;
   line-height: 1.5;
   overflow-x: auto;
+  tab-size: 4;
 }
 body .editor .code::before {
   color: #d9d9d9;
@@ -976,5 +977,3 @@ body .work .tani .lh {
   animation: work-lh-animation 1s ease forwards;
 }
 
-
-/*# sourceMappingURL=styles.chunk.css.map*/
